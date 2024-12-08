@@ -76,5 +76,5 @@ def sort_sources(input_file, output_file):
 
 if __name__ == "__main__":
     input_file = "1.m3u"  # 输入文件
-    output_file = "sorted_sources2.txt"  # 输出文件
+    output_file = "2.m3u"  # 输出文件
     sort_sources(input_file, output_file)

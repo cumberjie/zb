@@ -27,8 +27,16 @@ jobs:
 
       - name: Commit and push results
         run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "your-email@example.com"
+          # Configure git user details
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Ensure git is using the token for authentication
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          # Add the processed file
           git add sorted_live_streams.txt
           git commit -m "Add processed live streams file"
+          
+          # Push changes
           git push

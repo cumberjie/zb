@@ -44,8 +44,8 @@ for entry in sorted_data:
         # 处理数字M部分
         m_value = name.split(' ')[-1].replace('M', '') if 'M' in name else '0'
         
-        # 格式化条目
-        formatted_entry = f"{name},{url}?${m_value}"
+        # 格式化条目，确保地址末尾带上'M'
+        formatted_entry = f"{name},{url}?${m_value}M"
         formatted_data.append(formatted_entry)
 
 # 分类函数
@@ -64,10 +64,16 @@ def categorize_and_sort(data):
         else:
             others.append(entry)
     
-    # 对每个类别内部进行排序
-    cctv_sorted = sorted(cctv, key=custom_sort)
-    regional_sorted = sorted(regional, key=custom_sort)
-    others_sorted = sorted(others, key=lambda x: x.split(",")[0])
+    # 对每个类别内部进行排序，确保数字M大的排在前面，数字M为0的排在后面
+    def sort_key(entry):
+        name, url = entry.split(",", 1)
+        m_value = re.search(r"(\d*\.?\d+)M", name)
+        m_value = float(m_value.group(1)) if m_value else 0
+        return -m_value  # 排序时数字大的排前面，0排后面
+
+    cctv_sorted = sorted(cctv, key=sort_key)
+    regional_sorted = sorted(regional, key=sort_key)
+    others_sorted = sorted(others, key=lambda x: x.split(",")[0])  # 对“其他”类别按名称字母排序
     
     # 合并所有分类后的数据
     return cctv_sorted + regional_sorted + others_sorted

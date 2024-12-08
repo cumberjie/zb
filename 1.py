@@ -6,26 +6,27 @@ def parse_source(line):
     name = parts[0].strip()
     url = parts[1].strip() if len(parts) > 1 else ''
     match = re.search(r"(\d+(\.\d+)?M)", name, re.IGNORECASE)
-    quality = match.group(1) if match else ''  # 提取带有M的部分
-    return name, url, quality
+    quality = match.group(1).upper() if match else ''  # 提取带有M的部分并转换为大写
+    clean_name = re.sub(r"(\s*\d+(\.\d+)?M.*)", "", name, flags=re.IGNORECASE).strip()  # 去除质量信息的名称
+    return clean_name, url, quality
 
 def custom_sort_key(source):
     """定义排序规则"""
     name, _, quality = source
     
-    # 央视区
+    # 央视区排序
     if name.upper().startswith("CCTV"):
         match = re.match(r"CCTV(\d+)", name.upper())
-        number = int(match.group(1)) if match else float('inf')
-        return (0, number, -float(quality[:-1]) if quality else float('inf'), name)
+        number = int(match.group(1)) if match else float('inf')  # 提取数字
+        return (0, number, -float(quality[:-1]) if quality else float('inf'))
     
-    # 地区卫视区
+    # 地区卫视区排序
     elif "卫视" in name:
-        return (1, name, -float(quality[:-1]) if quality else float('inf'), name)
+        return (1, name, -float(quality[:-1]) if quality else float('inf'))
     
-    # 其他
+    # 其他排序
     else:
-        return (2, name, -float(quality[:-1]) if quality else float('inf'), name)
+        return (2, name, -float(quality[:-1]) if quality else float('inf'))
 
 def sort_sources(input_file, output_file):
     """读取、整理并输出结果"""

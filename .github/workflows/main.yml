@@ -38,7 +38,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
           # Add the processed file
-          git add sorted_sources2.txt
+          git add 2.m3u
           git commit -m "Add processed live streams file"
           
           # Push changes

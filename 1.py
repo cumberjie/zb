@@ -1,23 +1,41 @@
 import re
 
-# 从GitHub仓库中读取原始数据文件
+# 读取原始数据文件
 with open("1.m3u", "r", encoding="utf-8") as f:
     data = f.readlines()
 
 # 排序函数
 def custom_sort(entry):
-    name, url = entry.split(',')
-    
+    # 确保条目格式正确，避免出现没有逗号的情况
+    try:
+        name, url = entry.split(',')
+    except ValueError:
+        return None  # 如果数据格式不正确，返回None
+
     # 提取数字M部分
     match = re.search(r"(\d*\.?\d+)M", name)
     m_value = float(match.group(1)) if match else 0  # 如果没有数字M部分，默认为0
     return (name.replace("CCTV", ""), m_value)  # 排序依据为CCTV数字部分
 
-# 整理后的数据列表
-sorted_data = sorted(data, key=lambda entry: custom_sort(entry))
+# 过滤掉无效的条目
+valid_data = [entry for entry in data if custom_sort(entry) is not None]
 
-# 格式化输出
-formatted_data = [f"{entry.split(' ')[0]},{entry.split(',')[1]}?${entry.split(' ')[1].replace('M', '')}" for entry in sorted_data]
+# 排序后的数据
+sorted_data = sorted(valid_data, key=lambda entry: custom_sort(entry))
+
+# 格式化输出，确保每个条目都符合要求
+formatted_data = []
+for entry in sorted_data:
+    parts = entry.split(',')
+    
+    # 确保数据有足够的部分
+    if len(parts) >= 2:
+        name = parts[0].strip()
+        url = parts[1].strip()
+        # 处理数字M部分
+        m_value = name.split(' ')[-1].replace('M', '') if 'M' in name else '0'
+        formatted_entry = f"{name},{url}?${m_value}"
+        formatted_data.append(formatted_entry)
 
 # 分类函数
 def categorize_and_sort(data):
@@ -26,7 +44,7 @@ def categorize_and_sort(data):
     others = []
     
     for entry in data:
-        name, url = entry.split(",")
+        name, url = entry.split(",", 1)  # 确保只按第一个逗号分割
         name = name.upper()  # 不区分大小写，统一转为大写
         if "CCTV" in name:
             cctv.append(entry)

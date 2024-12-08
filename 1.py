@@ -1,65 +1,54 @@
 import re
 
-# 假设你的直播源数据存储在 文件中
-input_filename = '1.m3u'
-output_filename = '2.m3u'
- 
-# 读取文件并处理数据
-def process_live_sources(filename):
-    with open(filename, 'r') as file:
-        lines = file.readlines()
+# 从GitHub仓库中读取原始数据文件
+with open("1.m3u", "r", encoding="utf-8") as f:
+    data = f.readlines()
 
-    processed_lines = []
-    for line in lines:
-        parts = line.strip().split(',')
-        channel = parts[0].strip()
-        url = parts[1].strip()
-        bitrate_match = re.search(r'(\d+\.?\d*)M', parts[0])
-        if bitrate_match:
-            bitrate = bitrate_match.group(1)
-            processed_line = f"{channel},{url}?\\$({bitrate})M"
-            processed_lines.append(processed_line)
+# 排序函数
+def custom_sort(entry):
+    name, url = entry
+    # 提取数字M部分
+    match = re.search(r"(\d*\.?\d+)M", name)
+    m_value = float(match.group(1)) if match else 0  # 如果没有数字M部分，默认为0
+    return (name.replace("CCTV", ""), m_value)  # 排序依据为CCTV数字部分
 
-    # 对处理后的数据进行排序
-    processed_lines.sort(key=lambda x: (x.split(',')[0], x.split('?\\$')[1].split('M')[0]))
-    return processed_lines
+# 整理后的数据列表
+sorted_data = sorted(data, key=lambda entry: custom_sort(entry))
 
-# 分类处理后的数据
-def classify_live_sources(processed_lines):
-    categories = {
-        'CCTV': [],
-        'Satellite': [],
-        'Other': []
-    }
-    for line in processed_lines:
-        channel, url = line.split(',')
-        channel = channel.upper()
-        if channel.startswith('CCTV'):
-            categories['CCTV'].append(line)
-        elif '卫视' in channel:
-            categories['Satellite'].append(line)
+# 格式化输出
+formatted_data = [f"{entry.split(' ')[0]},{entry.split(',')[1]}?${entry.split(' ')[1].replace('M', '')}" for entry in sorted_data]
+
+# 分类函数
+def categorize_and_sort(data):
+    cctv = []
+    regional = []
+    others = []
+    
+    for entry in data:
+        name, url = entry.split(",")
+        name = name.upper()  # 不区分大小写，统一转为大写
+        if "CCTV" in name:
+            cctv.append(entry)
+        elif "卫视" in name:
+            regional.append(entry)
         else:
-            categories['Other'].append(line)
-    return categories
-
-# 主函数
-def main():
-    processed_lines = process_live_sources(input_filename)
+            others.append(entry)
     
-    # 打印排序后的数据
-    print("Sorted Live Sources:")
-    for line in processed_lines:
-        print(line)
+    # 对每个类别内部进行排序
+    cctv_sorted = sorted(cctv, key=custom_sort)
+    regional_sorted = sorted(regional, key=custom_sort)
+    others_sorted = sorted(others, key=lambda x: x.split(",")[0])
     
-    # 打印分类后的数据并写入到文件
-    print("\nClassified Live Sources:")
-    categories = classify_live_sources(processed_lines)
-    with open(output_filename, 'w') as file:  # 使用'w'模式覆盖文件
-        for category, lines in categories.items():
-            file.write(f"# {category}\n\n")
-            for line in lines:
-                file.write(line + "\n")
+    # 合并所有分类后的数据
+    return cctv_sorted + regional_sorted + others_sorted
 
-# 执行主函数
-if __name__ == "__main__":
-    main()
+# 分类并排序数据
+final_sorted_data = categorize_and_sort(formatted_data)
+
+# 将最终结果输出到新的文本文件
+output_file = "11.m3u"
+with open(output_file, 'w', encoding='utf-8') as f:
+    for line in final_sorted_data:
+        f.write(line + "\n")
+
+print(f"数据已经写入到 {output_file} 文件中！")

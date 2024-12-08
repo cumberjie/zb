@@ -41,11 +41,14 @@ for entry in sorted_data:
         name = parts[0].strip()
         url = parts[1].strip()
         
-        # 处理数字M部分
-        m_value = name.split(' ')[-1].replace('M', '') if 'M' in name else '0'
+        # 提取数字M部分并确保格式统一
+        m_value = re.search(r"(\d*\.?\d+)M", name)  # 查找数字M部分
+        if m_value:
+            m_value = m_value.group(1)  # 提取数字
+            formatted_entry = f"{name.split()[0]},{url}?${m_value}M"  # 保持CCTV名称部分并添加M
+        else:
+            formatted_entry = f"{name.split()[0]},{url}?$0M"  # 没有M部分的添加$0M
         
-        # 格式化条目，确保地址末尾带上'M'
-        formatted_entry = f"{name},{url}?${m_value}M"
         formatted_data.append(formatted_entry)
 
 # 分类函数

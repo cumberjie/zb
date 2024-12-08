@@ -1,93 +1,52 @@
 import re
 
-# 读取原始数据文件
-with open("1.m3u", "r", encoding="utf-8") as f:
-    data = f.readlines()
+def parse_source(line):
+    """解析每行内容，拆分出名称和URL"""
+    parts = line.split(',', 1)
+    name = parts[0].strip()
+    url = parts[1].strip() if len(parts) > 1 else ''
+    match = re.search(r"(\d+(\.\d+)?M)", name, re.IGNORECASE)
+    quality = match.group(1) if match else ''  # 提取带有M的部分
+    return name, url, quality
 
-# 排序函数
-def custom_sort(entry):
-    # 确保条目格式正确，避免出现没有逗号的情况
-    try:
-        name, url = entry.split(',')
-    except ValueError:
-        return None  # 如果数据格式不正确，返回None
-
-    # 提取CCTV的数字部分并处理
-    cctv_match = re.match(r"CCTV(\d+)", name.strip().upper())
-    if cctv_match:
-        cctv_number = int(cctv_match.group(1))  # 获取CCTV后的数字
+def custom_sort_key(source):
+    """定义排序规则"""
+    name, _, quality = source
+    
+    # 央视区
+    if name.upper().startswith("CCTV"):
+        match = re.match(r"CCTV(\d+)", name.upper())
+        number = int(match.group(1)) if match else float('inf')
+        return (0, number, -float(quality[:-1]) if quality else float('inf'), name)
+    
+    # 地区卫视区
+    elif "卫视" in name:
+        return (1, name, -float(quality[:-1]) if quality else float('inf'), name)
+    
+    # 其他
     else:
-        cctv_number = float('inf')  # 非CCTV条目排序到最后
+        return (2, name, -float(quality[:-1]) if quality else float('inf'), name)
 
-    # 提取数字M部分（如有）
-    m_match = re.search(r"(\d*\.?\d+)M", name)
-    m_value = float(m_match.group(1)) if m_match else 0  # 如果没有数字M部分，默认为0
-
-    return (cctv_number, m_value)
-
-# 过滤掉无效的条目
-valid_data = [entry for entry in data if custom_sort(entry) is not None]
-
-# 排序后的数据
-sorted_data = sorted(valid_data, key=lambda entry: custom_sort(entry))
-
-# 格式化输出，确保每个条目都符合要求
-formatted_data = []
-for entry in sorted_data:
-    parts = entry.split(',')
+def sort_sources(input_file, output_file):
+    """读取、整理并输出结果"""
+    with open(input_file, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
     
-    # 确保数据有足够的部分
-    if len(parts) >= 2:
-        name = parts[0].strip()
-        url = parts[1].strip()
-        
-        # 提取数字M部分并确保格式统一
-        m_value = re.search(r"(\d*\.?\d+)M", name)  # 查找数字M部分
-        if m_value:
-            m_value = m_value.group(1)  # 提取数字
-            formatted_entry = f"{name},{url}?${m_value}M"  # 保持CCTV名称部分并添加M
-        else:
-            formatted_entry = f"{name},{url}"  # 没有M部分的直接输出
-        
-        formatted_data.append(formatted_entry)
-
-# 分类函数
-def categorize_and_sort(data):
-    cctv = []
-    regional = []
-    others = []
+    # 解析数据
+    sources = [parse_source(line.strip()) for line in lines if line.strip()]
     
-    for entry in data:
-        name, url = entry.split(",", 1)  # 确保只按第一个逗号分割
-        name = name.upper()  # 不区分大小写，统一转为大写
-        if "CCTV" in name:
-            cctv.append(entry)
-        elif "卫视" in name:
-            regional.append(entry)
-        else:
-            others.append(entry)
+    # 排序
+    sorted_sources = sorted(sources, key=custom_sort_key)
     
-    # 对每个类别内部进行排序，确保数字M大的排在前面，数字M为0的排在后面
-    def sort_key(entry):
-        name, url = entry.split(",", 1)
-        m_value = re.search(r"(\d*\.?\d+)M", name)
-        m_value = float(m_value.group(1)) if m_value else 0
-        return -m_value  # 排序时数字大的排前面，0排后面
+    # 重新组装数据并输出
+    with open(output_file, 'w', encoding='utf-8') as file:
+        for name, url, quality in sorted_sources:
+            if quality:
+                file.write(f"{name},{url}?${quality}\n")
+            else:
+                file.write(f"{name},{url}\n")
 
-    cctv_sorted = sorted(cctv, key=sort_key)
-    regional_sorted = sorted(regional, key=sort_key)
-    others_sorted = sorted(others, key=lambda x: x.split(",")[0])  # 对“其他”类别按名称字母排序
-    
-    # 合并所有分类后的数据
-    return cctv_sorted + regional_sorted + others_sorted
-
-# 分类并排序数据
-final_sorted_data = categorize_and_sort(formatted_data)
-
-# 将最终结果输出到新的文本文件
-output_file = "sorted_live_streams.txt"
-with open(output_file, 'w', encoding='utf-8') as f:
-    for line in final_sorted_data:
-        f.write(line + "\n")
-
-print(f"数据已经写入到 {output_file} 文件中！")
+if __name__ == "__main__":
+    input_file = "1.m3u"  # 输入文件
+    output_file = "sorted_sources.txt"  # 输出文件
+    sort_sources(input_file, output_file)

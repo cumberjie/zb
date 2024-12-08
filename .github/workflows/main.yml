@@ -21,10 +21,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r 1.m3u
+      # 如果没有其他Python依赖，删除下面的步骤
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt
 
       - name: Run data processing script
         run: |
@@ -34,6 +35,6 @@ jobs:
         run: |
           git config --global user.name "Your Name"
           git config --global user.email "your-email@example.com"
-          git add 11.m3u
+          git add sorted_live_streams.txt
           git commit -m "Add processed live streams file"
           git push

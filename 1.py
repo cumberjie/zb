@@ -12,10 +12,18 @@ def custom_sort(entry):
     except ValueError:
         return None  # 如果数据格式不正确，返回None
 
-    # 提取数字M部分
-    match = re.search(r"(\d*\.?\d+)M", name)
-    m_value = float(match.group(1)) if match else 0  # 如果没有数字M部分，默认为0
-    return (name.replace("CCTV", ""), m_value)  # 排序依据为CCTV数字部分
+    # 处理名称中的CCTV和数字部分，提取出数字
+    cctv_match = re.match(r"CCTV(\d+)", name.strip().upper())
+    if cctv_match:
+        cctv_number = int(cctv_match.group(1))  # 获取CCTV后的数字
+    else:
+        cctv_number = float('inf')  # 非CCTV条目排序到最后
+
+    # 提取数字M部分（如有）
+    m_match = re.search(r"(\d*\.?\d+)M", name)
+    m_value = float(m_match.group(1)) if m_match else 0  # 如果没有数字M部分，默认为0
+
+    return (cctv_number, m_value)
 
 # 过滤掉无效的条目
 valid_data = [entry for entry in data if custom_sort(entry) is not None]
@@ -32,8 +40,11 @@ for entry in sorted_data:
     if len(parts) >= 2:
         name = parts[0].strip()
         url = parts[1].strip()
+        
         # 处理数字M部分
         m_value = name.split(' ')[-1].replace('M', '') if 'M' in name else '0'
+        
+        # 格式化条目
         formatted_entry = f"{name},{url}?${m_value}"
         formatted_data.append(formatted_entry)
 

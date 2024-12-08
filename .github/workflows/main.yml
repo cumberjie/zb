@@ -25,4 +25,9 @@ jobs:
 
     - name: Run Python script
       run: |
-        python 1.py
+          python 1.py
+          git branch -m main
+          git add --all
+          git commit -m "Updated at $(date)"
+          git fetch --unshallow origin
+          git push -u -f origin --all

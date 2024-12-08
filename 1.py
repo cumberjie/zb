@@ -1,8 +1,8 @@
 import re
 
-# 假设你的直播源数据存储在 live_sources.txt 文件中
-filename = '1.m3u'
-output_filename = '1(g).m3u'
+# 假设你的直播源数据存储在  文件中
+input_filename = '1.m3u'
+output_filename = '2.m3u'
 
 # 读取文件并处理数据
 def process_live_sources(filename):
@@ -44,20 +44,19 @@ def classify_live_sources(processed_lines):
 
 # 主函数
 def main():
-    processed_lines = process_live_sources(filename)
+    processed_lines = process_live_sources(input_filename)
     
     # 打印排序后的数据
     print("Sorted Live Sources:")
     for line in processed_lines:
         print(line)
     
-    # 打印分类后的数据
+    # 打印分类后的数据并写入到文件
     print("\nClassified Live Sources:")
     categories = classify_live_sources(processed_lines)
-    for category, lines in categories.items():
-        print(f"{category}:\n{lines}\n")
-        # 写入到文件
-        with open(output_filename, 'a') as file:
+    with open(output_filename, 'w') as file:  # 使用'w'模式覆盖文件
+        for category, lines in categories.items():
+            file.write(f"# {category}\n\n")
             for line in lines:
                 file.write(line + "\n")
 

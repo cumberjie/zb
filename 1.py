@@ -1,7 +1,8 @@
 import re
 
-# 假设你的直播源数据存储在 文件中
+# 假设你的直播源数据存储在 live_sources.txt 文件中
 filename = '1.m3u'
+output_filename = '1(g).m3u'
 
 # 读取文件并处理数据
 def process_live_sources(filename):
@@ -55,6 +56,10 @@ def main():
     categories = classify_live_sources(processed_lines)
     for category, lines in categories.items():
         print(f"{category}:\n{lines}\n")
+        # 写入到文件
+        with open(output_filename, 'a') as file:
+            for line in lines:
+                file.write(line + "\n")
 
 # 执行主函数
 if __name__ == "__main__":

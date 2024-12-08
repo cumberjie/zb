@@ -1,7 +1,7 @@
 import re
 
 # 从GitHub仓库中读取原始数据文件
-with open("1.txt", "r", encoding="utf-8") as f:
+with open("1.m3u", "r", encoding="utf-8") as f:
     data = f.readlines()
 
 # 排序函数
@@ -46,7 +46,7 @@ def categorize_and_sort(data):
 final_sorted_data = categorize_and_sort(formatted_data)
 
 # 将最终结果输出到新的文本文件
-output_file = "11.txt"
+output_file = "11.m3u"
 with open(output_file, 'w', encoding='utf-8') as f:
     for line in final_sorted_data:
         f.write(line + "\n")

@@ -12,7 +12,7 @@ def custom_sort(entry):
     except ValueError:
         return None  # 如果数据格式不正确，返回None
 
-    # 处理名称中的CCTV和数字部分，提取出数字
+    # 提取CCTV的数字部分并处理
     cctv_match = re.match(r"CCTV(\d+)", name.strip().upper())
     if cctv_match:
         cctv_number = int(cctv_match.group(1))  # 获取CCTV后的数字
@@ -45,9 +45,9 @@ for entry in sorted_data:
         m_value = re.search(r"(\d*\.?\d+)M", name)  # 查找数字M部分
         if m_value:
             m_value = m_value.group(1)  # 提取数字
-            formatted_entry = f"{name.split()[0]},{url}?${m_value}M"  # 保持CCTV名称部分并添加M
+            formatted_entry = f"{name},{url}?${m_value}M"  # 保持CCTV名称部分并添加M
         else:
-            formatted_entry = f"{name.split()[0]},{url}?$0M"  # 没有M部分的添加$0M
+            formatted_entry = f"{name},{url}"  # 没有M部分的直接输出
         
         formatted_data.append(formatted_entry)
 

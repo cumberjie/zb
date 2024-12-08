@@ -6,7 +6,8 @@ with open("1.m3u", "r", encoding="utf-8") as f:
 
 # 排序函数
 def custom_sort(entry):
-    name, url = entry
+    name, url = entry.split(',')
+    
     # 提取数字M部分
     match = re.search(r"(\d*\.?\d+)M", name)
     m_value = float(match.group(1)) if match else 0  # 如果没有数字M部分，默认为0
@@ -41,12 +42,12 @@ def categorize_and_sort(data):
     
     # 合并所有分类后的数据
     return cctv_sorted + regional_sorted + others_sorted
- 
+
 # 分类并排序数据
 final_sorted_data = categorize_and_sort(formatted_data)
 
 # 将最终结果输出到新的文本文件
-output_file = "11.m3u"
+output_file = "sorted_live_streams.txt"
 with open(output_file, 'w', encoding='utf-8') as f:
     for line in final_sorted_data:
         f.write(line + "\n")

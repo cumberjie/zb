@@ -1,6 +1,6 @@
 import re
 
-# 假设你的直播源数据存储在  文件中
+# 假设你的直播源数据存储在 文件中
 input_filename = '1.m3u'
 output_filename = '2.m3u'
 

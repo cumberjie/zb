@@ -175,7 +175,6 @@ CCTV-17农业农村,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/322122576
 深圳卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225739/index.m3u8?$4M
 天津卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225740/index.m3u8?$4M
 深圳卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225739/index.m3u8?$4M
-卫视,#genre#
 大湾区卫视,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225748/index.m3u8
 深圳卫视,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225725/index.m3u8
 深圳卫视,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225951/index.m3u8
@@ -211,7 +210,6 @@ CCTV-17农业农村,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/322122576
 三沙卫视,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226315/index.m3u8
 康巴卫视,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226270/index.m3u8
 安多卫视,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226271/index.m3u8
-卫视2,#genre#
 宁夏卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226454/index.m3u8
 西藏卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226433/index.m3u8
 青海卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226323/index.m3u8
@@ -234,7 +232,6 @@ CCTV-17农业农村,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/322122576
 辽宁卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226546/index.m3u8
 山东卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226456/index.m3u8
 东南卫视,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226341/index.m3u8
-卫视3,#genre#
 
 其他,#genre#
 CETV1,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225776/index.m3u8
@@ -271,8 +268,6 @@ NewTV金牌综艺,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225666/
 健康,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225684/index.m3u8
 公共频道,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226310/index.m3u8
 公共频道,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226297/index.m3u8
-其他,#genre#
-其他精品,#genre#
 军事评论,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225749/index.m3u8
 军旅剧场,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225727/index.m3u8
 农业致富,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225687/index.m3u8
@@ -294,9 +289,6 @@ NewTV金牌综艺,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225666/
 嘉佳卡通,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225797/index.m3u8
 央广购物,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226068/index.m3u8?$4M
 央广购物,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225719/index.m3u8?$4M
-央视,#genre#
-央视2,#genre#
-央视3,#genre#
 安徽家家购物,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226065/index.m3u8?$4M
 家庭剧场,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225743/index.m3u8
 山东居家购物,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225708/index.m3u8?$4M
@@ -305,7 +297,6 @@ NewTV金牌综艺,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225666/
 山西优购物,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226091/index.m3u8?$4M
 崇左综合,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226284/index.m3u8
 广东珠江,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225717/index.m3u8
-广西地区,#genre#
 广西都市,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226295/index.m3u8
 新闻综合,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226300/index.m3u8
 新闻综合,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226309/index.m3u8

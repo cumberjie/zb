@@ -153,7 +153,7 @@ CCTV17,http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225766/index.m3u8?
 精品萌宠,http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225979/index.m3u8?servicetype=1
 
 
-其他,#genre#
+精品,#genre#
 黑莓电影,http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225740/index.m3u8?servicetype=1
 黑莓动画,http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225710/index.m3u8?servicetype=1
 哒啵赛事,http://cdnrrs.gx.chinamobile.com/PLTV/77777777/224/3221225760/index.m3u8?servicetype=1
@@ -585,7 +585,7 @@ CCTV17,http://39.134.136.161:6610/000000001000/2000000003000000038/index.m3u8?li
 陕西卫视,http://39.134.136.161:6610/000000001000/6194965711565916623/index.m3u8?livemode=1&stbId=10&channel-id=wasusyt&Contentid=6194965711565916623
 青海卫视,http://39.134.136.161:6610/000000001000/6399324389404552555/index.m3u8?livemode=1&stbId=10&channel-id=wasusyt&Contentid=6399324389404552555
 
-其他2,#genre#
+其他,#genre#
 4K影院,http://39.134.136.161:6610/000000001000/6000000003000004748/index.m3u8?livemode=1&stbId=1213&channel-id=wasusyt&Contentid=6000000003000004748?$20M
 CETV1,http://39.134.136.161:6610/000000001000/5000000002000002652/index.m3u8?livemode=1&stbId=10&channel-id=bestzb&Contentid=5000000002000002652?$4M
 CETV1,http://39.134.136.161:6610/000000001000/1000000002000027253/index.m3u8?livemode=1&stbId=10&channel-id=ystenlive&Contentid=1000000002000027253

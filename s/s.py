@@ -86,7 +86,7 @@ def merge_and_sort_sources(input_files, output_file):
 
 if __name__ == "__main__":
    # 读取所有文档
-   input_files = glob.glob("s/*")  # 或 glob.glob(f"{folder_path}/*.m3u") 只筛选 .m3u 文件
+   input_files = glob.glob(f"s/*")  # 或 glob.glob(f"{folder_path}/*.m3u") 只筛选 .m3u 文件
     
    output_file = "s.m3u"  # 输出文件
    merge_and_sort_sources(input_files, output_file)

@@ -6,13 +6,26 @@ WEISHI_ORDER = [
     "江苏卫视", "河南卫视", "北京卫视", "东方卫视", "四川卫视", "广东卫视"
 ]
 
+
 def parse_source(line):
     """解析每行内容，拆分出名称和URL"""
+    # 将名称中的 `CCTV-数字 空格 文字` 格式处理为 `CCTV数字`
+    def process_cctv_name(name):
+        # 匹配 CCTV-数字 空格 文字 的结构并替换为 CCTV数字
+        return re.sub(r'CCTV-(\d+)\s+\S*', r'CCTV\1', name)
+    
     parts = line.split(',', 1)
     name = parts[0].strip()
     url = parts[1].strip() if len(parts) > 1 else ''
+    
+    # 先处理名称中的 CCTV 格式
+    name = process_cctv_name(name)
+    
+    # 提取质量 (带有M的部分)
     match = re.search(r"(\d+(\.\d+)?M)", name, re.IGNORECASE)
     quality = match.group(1).upper() if match else ''  # 提取带有M的部分并转换为大写
+    
+    # 处理干净的名称 (去掉质量信息)
     clean_name = re.sub(r"(\s*\d+(\.\d+)?M.*)", "", name, flags=re.IGNORECASE).strip()  # 去除质量信息的名称
     return clean_name, url, quality
 

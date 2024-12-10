@@ -55,16 +55,16 @@ def sort_sources(input_file, output_file):
         with open(input_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
         sources = [parse_source(line.strip()) for line in lines if line.strip()]
-  
-    # 去除重复的URL
-    unique_sources = []
-    seen_urls = set()
-    for source in sources:
-        name, url, quality = source
-        if url not in seen_urls:
-            seen_urls.add(url)
-            unique_sources.append(source)
-    
+        # 去除重复的URL
+        unique_sources = []
+        seen_urls = set()
+        for source in sources:
+            name, url, quality = source
+            if url not in seen_urls:
+                seen_urls.add(url)
+                unique_sources.append(source)
+        all_sources.extend(unique_sources)
+ 
     # 排序
     sorted_sources = sorted(unique_sources, key=custom_sort_key)
     
@@ -97,7 +97,7 @@ def sort_sources(input_file, output_file):
                 file.write(f"{name},{url}\n")
 
 if __name__ == "__main__":
-    input_file =["99.m3u","by2.m3u"] # 输入文件
+    input_file = ["99.m3u","by2.m3u"] # 输入文件
     output_file = "by9.m3u"  # 输出文件
     sort_sources(input_file, output_file)
     

@@ -51,20 +51,22 @@ def sort_sources(input_files, output_file):
     """读取、整理并输出结果"""
     # 读取所有文件，解析数据，并存储到一个列表中
     all_sources = []
+    seen_urls = set()  # 用于跟踪所有文件中的唯一URL
+
+    # 遍历所有输入文件
     for input_file in input_files:
         with open(input_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
+        
+        # 解析每一行数据
         sources = [parse_source(line.strip()) for line in lines if line.strip()]
-        # 去除重复的URL
-        unique_sources = []
-        seen_urls = set()
-        for source in sources:
-            name, url, quality = source
+        
+        # 去除重复的URL，只添加尚未见过的URL
+        for name, url, quality in sources:
             if url not in seen_urls:
                 seen_urls.add(url)
-                unique_sources.append(source)
-        all_sources.extend(unique_sources)
- 
+                all_sources.append((name, url, quality))
+
     # 排序
     sorted_sources = sorted(unique_sources, key=custom_sort_key)
     

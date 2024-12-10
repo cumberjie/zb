@@ -25,7 +25,7 @@ def custom_sort_key(source):
         return (1, order_index, -float(quality[:-1]) if quality else float('inf'))
     elif name.startswith("本地") or re.match(r"精品\d+", name):
         # 本地和精品分类不参与整体排序
-        return (name, -float(quality[:-1]) if quality else float('inf'))
+        return (4, name, -float(quality[:-1]) if quality else float('inf'))
     return (2, name, -float(quality[:-1]) if quality else float('inf'))
 
 def sort_and_write_sources(sources, output_file):
@@ -33,7 +33,13 @@ def sort_and_write_sources(sources, output_file):
     # 分类并排序
     cctv_sources = sorted([source for source in sources if source[0].startswith("CCTV")], key=custom_sort_key)
     weishi_sources = sorted([source for source in sources if "卫视" in source[0]], key=custom_sort_key)
-    local_sources = sorted([source for source in sources if source[0].startswith("本地")], key=lambda x: x[0])
+    local_sources = [source for source in sources if source[0].startswith("本地")]
+    fine_sources = {}
+    for source in sources:
+        if re.match(r"精品\d+", source[0]):
+            if source[0] not in fine_sources:
+                fine_sources[source[0]] = []
+            fine_sources[source[0]].append(source)
     other_sources = sorted([source for source in sources if not source[0].startswith("CCTV") and "卫视" not in source[0] and not source[0].startswith("本地") and not re.match(r"精品\d+", source[0])], key=custom_sort_key)
 
     with open(output_file, 'w', encoding='utf-8') as file:
@@ -46,17 +52,14 @@ def sort_and_write_sources(sources, output_file):
             file.write(f"{name},{url}?${quality}\n" if quality else f"{name},{url}\n")
         
         file.write("\n本地,#genre#\n")
-        for name, url, quality in local_sources:
+        for name, url, quality in sorted(local_sources, key=lambda x: x[0]):
             file.write(f"{name},{url}?${quality}\n" if quality else f"{name},{url}\n")
         
-        file.write("\n精品,#genre#\n")
-        for group in [source for source in sources if re.match(r"精品\d+", source[0])]:
-            group_name = group[0]
-            group_sorted = sorted(group, key=lambda x: x[1])
-            file.write(f"{group_name},#genre#\n")
-            for name, url, quality in group_sorted:
+        for fine_name, group in fine_sources.items():
+            file.write(f"\n{fine_name},#genre#\n")
+            for name, url, quality in sorted(group, key=lambda x: x[0]):
                 file.write(f"{name},{url}?${quality}\n" if quality else f"{name},{url}\n")
-
+        
         file.write("\n其他,#genre#\n")
         for name, url, quality in other_sources:
             file.write(f"{name},{url}?${quality}\n" if quality else f"{name},{url}\n")
@@ -72,6 +75,6 @@ def merge_and_sort_sources(input_files, output_file):
     sort_and_write_sources(sources, output_file)
 
 if __name__ == "__main__":
-    file_paths = ["0.m3u", "by.m3u", "99.m3u"]
+    file_paths = ["0.m3u", "by.m3u"]
     if file_paths:
         merge_and_sort_sources(file_paths, "091.m3u")

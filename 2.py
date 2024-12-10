@@ -12,7 +12,7 @@ def parse_source(line):
     # 将名称中的 `CCTV-数字 空格 文字` 格式处理为 `CCTV数字`
     def process_cctv_name(name):
         # 匹配 CCTV-数字 空格 文字 的结构并替换为 CCTV数字
-        return re.sub(r'CCTV-(\d+)\s+\S*', r'CCTV\1', name)
+        return re.sub(r'CCTV-(\d+)\S*', r'CCTV\1', name)
  
     parts = line.split(',', 1)
     name = parts[0].strip()

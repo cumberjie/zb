@@ -26,7 +26,7 @@ jobs:
 
       - name: Run data processing script
         run: |
-          python s.py
+          python sjb.py
 
       - name: Commit and push results
         run: |
@@ -38,7 +38,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
           # Add the processed file
-          git add s.m3u
+          git add sjb.m3u
           git commit -m "Add processed live streams file"
           
           # Push changes

@@ -1,0 +1,62 @@
+name: Process Live Stream Data
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  process-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run data processing script
+        run: |
+          python 4.py
+
+      - name: Get output file name
+        id: get_filename
+        run: |
+          # 假设你的Python脚本将输出文件名打印到标准输出
+          # 并且文件名是输出的最后一行
+          output_file=$(python 4.py)
+          echo "output_file=$output_file" >> $GITHUB_ENV
+
+      - name: Check if the file exists
+        if: env.output_file != ''
+        run: |
+          if [ -f "${{ env.output_file }}" ]; then
+            echo "File ${{ env.output_file }} exists."
+          else
+            echo "File ${{ env.output_file }} does not exist."
+            exit 1
+          fi
+
+      - name: Commit and push results
+        if: env.output_file != '' && success()
+        run: |
+          # Configure git user details
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Ensure git is using the token for authentication
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+          # Add the processed file
+          git add "${{ env.output_file }}"
+          git commit -m "Add processed file: ${{ env.output_file }}"
+          # Push changes
+          git push

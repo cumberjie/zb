@@ -99,7 +99,7 @@ CGTN,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225816/index.m3u8
 康巴卫视,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226270/index.m3u8
 安多卫视,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226271/index.m3u8
 
-广西地区,#genre#
+本地,#genre#
 广西都市,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226295/index.m3u8
 南宁新闻综合,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226281/index.m3u8
 南宁文旅生活,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226288/index.m3u8
@@ -121,7 +121,7 @@ CGTN,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225816/index.m3u8
 新闻综合,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226294/index.m3u8
 经济科教,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226308/index.m3u8
 
-其他,#genre#
+精品,#genre#
 纪实人文,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221226016/index.m3u8
 纪实科教,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225995/index.m3u8
 精品记录,http://cdnrrs.gx.chinamobile.com/PLTV/88888888/224/3221225681/index.m3u8
@@ -289,7 +289,7 @@ CCTV17 4M1080,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225765/inde
 贵州卫视 8M1080,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226474/index.m3u8
 重庆卫视 8M1080,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226409/index.m3u8
 
-其他精品,#genre#
+精品2,#genre#
 上海纪实人文 4M1080,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225738/index.m3u8
 北京纪实科教 4M1080,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225729/index.m3u8
 NewTV东北热剧 4M1080,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225741/index.m3u8

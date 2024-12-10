@@ -85,6 +85,15 @@ def merge_and_sort_sources(input_files, output_file):
                 file.write(f"{name},{url}\n")
 
 if __name__ == "__main__":
-    input_files = glob("s/*")  # 指定输入文件的路径模式
-    output_file = "s.m3u"  # 输出文件
-    merge_and_sort_sources(input_files, output_file)
+    # 替换此路径为你的文件夹路径
+    folder_path = "s"  # 指定文件夹路径
+
+    # 读取所有文档
+    input_files = glob.glob(f"{folder_path}/*")  # 或 glob.glob(f"{folder_path}/*.m3u") 只筛选 .m3u 文件
+
+    if not input_files:
+        print(f"文件夹 {folder_path} 中没有找到文件！")
+    else:
+        print(f"发现的文件: {input_files}")
+        output_file = "s.m3u"  # 输出文件
+        merge_and_sort_sources(input_files, output_file)

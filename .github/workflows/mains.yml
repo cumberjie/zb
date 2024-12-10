@@ -39,7 +39,8 @@ jobs:
           
           # Add the processed file
           git add sjb.m3u
-          git commit -m "Add processed live streams file"
+          git commit -m "Updated at $(date)" --allow-empty
           
+      
           # Push changes
           git push

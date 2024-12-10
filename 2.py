@@ -47,11 +47,11 @@ def custom_sort_key(source):
     else:
         return (2, name, -float(quality[:-1]) if quality else float('inf'))
 
-def sort_sources(input_file, output_file):
+def sort_sources(input_files, output_file):
     """读取、整理并输出结果"""
     # 读取所有文件，解析数据，并存储到一个列表中
     all_sources = []
-    for input_file in input_file:
+    for input_file in input_files:
         with open(input_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
         sources = [parse_source(line.strip()) for line in lines if line.strip()]
@@ -99,5 +99,5 @@ def sort_sources(input_file, output_file):
 if __name__ == "__main__":
     input_file = ["99.m3u","by2.m3u"] # 输入文件
     output_file = "by9.m3u"  # 输出文件
-    sort_sources(input_file, output_file)
+    sort_sources(input_files, output_file)
     

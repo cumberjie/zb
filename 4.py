@@ -51,6 +51,6 @@ def merge_and_sort_sources(input_files, output_file):
     sort_and_write_sources(sources, output_file)
 
 if __name__ == "__main__":
-    file_paths = ["0.m3u", "by9.m3u"]
+    file_paths = ["bd.m3u"]
     if file_paths:
-        merge_and_sort_sources(file_paths, "09.m3u")
+        merge_and_sort_sources(file_paths, "bdd.m3u")

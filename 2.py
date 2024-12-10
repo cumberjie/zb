@@ -51,7 +51,7 @@ def sort_sources(input_file, output_file):
     """读取、整理并输出结果"""
     # 读取所有文件，解析数据，并存储到一个列表中
     all_sources = []
-    for input_file in input_files:
+    for input_file in input_file:
         with open(input_file, 'r', encoding='utf-8') as file:
             lines = file.readlines()
         sources = [parse_source(line.strip()) for line in lines if line.strip()]

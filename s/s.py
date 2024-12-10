@@ -85,6 +85,6 @@ def merge_and_sort_sources(input_files, output_file):
                 file.write(f"{name},{url}\n")
 
 if __name__ == "__main__":
-    input_files = glob("input_folder/*.m3u")  # 指定输入文件的路径模式
+    input_files = glob("s/*")  # 指定输入文件的路径模式
     output_file = "s.m3u"  # 输出文件
     merge_and_sort_sources(input_files, output_file)

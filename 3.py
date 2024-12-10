@@ -110,12 +110,10 @@ def merge_and_sort_sources(input_files, output_file):
 
 # 主函数
 if __name__ == "__main__":
-    print("99.m3u,by2.m3u")
-    user_input = input("> ").strip()
-    file_paths = [path.strip() for path in user_input.split(",") if path.strip()]
-    
+    file_paths = ["99.m3u", "by2.m3u"]        
+
     if not file_paths:
         print("未提供任何文档路径，程序终止。")
     else:
-        output_file = "by9.m3u"  # 输出文件
+        output_file = "merged_output.m3u"  # 输出文件
         merge_and_sort_sources(file_paths, output_file)

@@ -20,7 +20,27 @@ def parse_source(line):
     
     # 先处理名称中的 CCTV 格式
     name = process_cctv_name(name)
-    
+
+    # 存储不重复的URL
+    unique_urls = set()
+
+    # 存储最终的结果，每个URL只保留一次
+    unique_data = []
+    for line in lines:
+        parts = line.split(',', 1)
+        processed_name = process_cctv_name(parts[0].strip())
+        url = parts[1].strip() if len(parts) > 1 else ''
+        
+        # 如果URL不在集合中，则添加到集合和结果列表中
+        if url not in unique_urls:
+            unique_urls.add(url)
+            unique_data.append(f"{processed_name},{url}")
+
+    # 输出结果
+    for item in unique_data:
+        print(item)
+
+
     # 提取质量 (带有M的部分)
     match = re.search(r"(\d+(\.\d+)?M)", name, re.IGNORECASE)
     quality = match.group(1).upper() if match else ''  # 提取带有M的部分并转换为大写

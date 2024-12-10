@@ -26,7 +26,7 @@ jobs:
 
       - name: Run data processing script
         run: |
-          python 3.py
+          python 4.py
 
       - name: Commit and push results
         run: |

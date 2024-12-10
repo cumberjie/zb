@@ -110,7 +110,7 @@ def merge_and_sort_sources(input_files, output_file):
 
 # 主函数
 if __name__ == "__main__":
-    file_paths = ["0.m3u", "by9.m3u"]        
+    file_paths = ["0.m3u", "99.m3u","by.m3u"]        
 
     if not file_paths:
         print("未提供任何文档路径，程序终止。")

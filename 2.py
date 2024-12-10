@@ -13,34 +13,14 @@ def parse_source(line):
     def process_cctv_name(name):
         # 匹配 CCTV-数字 空格 文字 的结构并替换为 CCTV数字
         return re.sub(r'CCTV-(\d+\+?)\s*\S*', r'CCTV\1', name)
- 
+
     parts = line.split(',', 1)
     name = parts[0].strip()
     url = parts[1].strip() if len(parts) > 1 else ''
     
     # 先处理名称中的 CCTV 格式
     name = process_cctv_name(name)
-
-    # 存储不重复的URL
-    unique_urls = set()
-
-    # 存储最终的结果，每个URL只保留一次
-    unique_data = []
-    for line in lines:
-        parts = line.split(',', 1)
-        processed_name = process_cctv_name(parts[0].strip())
-        url = parts[1].strip() if len(parts) > 1 else ''
-        
-        # 如果URL不在集合中，则添加到集合和结果列表中
-        if url not in unique_urls:
-            unique_urls.add(url)
-            unique_data.append(f"{processed_name},{url}")
-
-    # 输出结果
-    for item in unique_data:
-        print(item)
-
-
+    
     # 提取质量 (带有M的部分)
     match = re.search(r"(\d+(\.\d+)?M)", name, re.IGNORECASE)
     quality = match.group(1).upper() if match else ''  # 提取带有M的部分并转换为大写
@@ -48,6 +28,28 @@ def parse_source(line):
     # 处理干净的名称 (去掉质量信息)
     clean_name = re.sub(r"(\s*\d+(\.\d+)?M.*)", "", name, flags=re.IGNORECASE).strip()  # 去除质量信息的名称
     return clean_name, url, quality
+
+def remove_duplicate_urls(data):
+    """从数据中移除重复的URL"""
+    unique_urls = set()
+    unique_data = []
+
+    for line in data:
+        clean_name, url, quality = parse_source(line)
+        
+        # 如果URL不在集合中，则添加到集合和结果列表中
+        if url not in unique_urls:
+            unique_urls.add(url)
+            unique_data.append((clean_name, url, quality))
+
+    return unique_data
+
+# 移除重复的URL并获取唯一的数据
+unique_data = remove_duplicate_urls(lines)
+
+# 输出结果
+for clean_name, url, quality in unique_data:
+    print(f"{clean_name},{url},{quality}")
 
 
 def custom_sort_key(source):

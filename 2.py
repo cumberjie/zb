@@ -9,7 +9,11 @@ WEISHI_ORDER = [
 
 def parse_source(line):
     """解析每行内容，拆分出名称和URL"""
-
+    # 将名称中的 `CCTV-数字 空格 文字` 格式处理为 `CCTV数字`
+    def process_cctv_name(name):
+        # 匹配 CCTV-数字 空格 文字 的结构并替换为 CCTV数字
+        return re.sub(r'CCTV-(\d+)\s+\S*', r'CCTV\1', name)
+ 
     parts = line.split(',', 1)
     name = parts[0].strip()
     url = parts[1].strip() if len(parts) > 1 else ''
@@ -24,11 +28,6 @@ def parse_source(line):
     # 处理干净的名称 (去掉质量信息)
     clean_name = re.sub(r"(\s*\d+(\.\d+)?M.*)", "", name, flags=re.IGNORECASE).strip()  # 去除质量信息的名称
     return clean_name, url, quality
-    # 将名称中的 `CCTV-数字` 格式处理为 `CCTV数字`
-    def process_cctv_name(name):
-        # 匹配 CCTV-数字 + 任意文字，并替换为 CCTV数字
-        return re.sub(r'CCTV-(\d+)\S*', r'CCTV\1', name)
-    
 
 
 def custom_sort_key(source):

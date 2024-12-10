@@ -99,3 +99,31 @@ if __name__ == "__main__":
     input_file =["99.m3u","by2.m3u"] # 输入文件
     output_file = "by9.m3u"  # 输出文件
     sort_sources(input_file, output_file)
+    
+    # 读取所有文件，解析数据，并存储到一个列表中
+    all_sources = []
+    for input_file in input_files:
+        with open(input_file, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+        sources = [parse_source(line.strip()) for line in lines if line.strip()]
+        # 去除重复的URL
+        unique_sources = []
+        seen_urls = set()
+        for source in sources:
+            name, url, quality = source
+            if url not in seen_urls:
+                seen_urls.add(url)
+                unique_sources.append(source)
+        all_sources.extend(unique_sources)
+
+    # 对所有数据进行排序
+    sorted_sources = sorted(all_sources, key=custom_sort_key)
+
+    # 输出到一个文件
+    with open(output_file, 'w', encoding='utf-8') as file:
+        for source in sorted_sources:
+            name, url, quality = source
+            if quality:
+                file.write(f"{name},{url}?${quality}\n")
+            else:
+                file.write(f"{name},{url}\n")

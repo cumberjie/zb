@@ -27,7 +27,7 @@ jobs:
         id: run_script
         run: |
           # 运行Python脚本并捕获输出的文件名
-          file_paths=$(python 4.py)
+          file_paths=$(python 3.py)
           echo "file_paths=$file_paths" >> $GITHUB_OUTPUT
 
       - name: Commit and push results

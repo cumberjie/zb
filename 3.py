@@ -117,3 +117,4 @@ if __name__ == "__main__":
     else:
         output_file = "091.m3u"  # 输出文件
         merge_and_sort_sources(file_paths, output_file)
+        print(output_file)

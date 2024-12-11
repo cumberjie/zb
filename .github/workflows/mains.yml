@@ -16,7 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          # 这里启用完整的历史记录，避免浅克隆
           fetch-depth: 0
 
       - name: Set up Python
@@ -25,22 +24,21 @@ jobs:
           python-version: '3.x'
 
       - name: Run data processing script
+        id: run_script
         run: |
-          python sjb.py
+          # 运行Python脚本并捕获输出的文件名
+          output_file=$(python 4.py)
+          echo "output_file=$output_file" >> $GITHUB_OUTPUT
 
       - name: Commit and push results
         run: |
-          # Configure git user details
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Ensure git is using the token for authentication
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
-          # Add the processed file
-          git add sjb.m3u
-          git commit -m "Updated at $(date)" --allow-empty
+          # 使用动态获取的文件名
+          git add ${{ steps.run_script.outputs.output_file }}
+          git commit -m "Add processed live streams file"
           
-      
-          # Push changes
           git push

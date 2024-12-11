@@ -115,6 +115,6 @@ if __name__ == "__main__":
     if not file_paths:
         print("未提供任何文档路径，程序终止。")
     else:
-        output_file = "091.m3u"  # 输出文件
+        output_file = "092.m3u"  # 输出文件
         merge_and_sort_sources(file_paths, output_file)
         print(output_file)

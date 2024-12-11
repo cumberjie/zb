@@ -26,8 +26,8 @@ jobs:
       - name: Run data processing script
         id: run_script
         run: |
-          # 运行Python脚本并捕获输出的文件名
-          output_file=$(python 3.py)
+          # 使用 awk 提取最后一行（文件名）
+          output_file=$(python 3.py | awk 'END{print $NF}')
           echo "Output file: $output_file"
           echo "output_file=$output_file" >> $GITHUB_OUTPUT
 

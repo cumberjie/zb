@@ -23,7 +23,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # 运行脚本并获取输出文件名
-          output_file=$(python 3.py | awk 'END{print $NF}')
+          output_file=$(python 4.py | awk 'END{print $NF}')
           
           # 配置 Git
           git config user.name github-actions

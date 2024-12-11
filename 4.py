@@ -54,3 +54,5 @@ if __name__ == "__main__":
     file_paths = ["bd.m3u"]
     if file_paths:
         merge_and_sort_sources(file_paths, "bdd.m3u")
+        
+        print(file_paths)

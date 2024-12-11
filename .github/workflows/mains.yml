@@ -27,8 +27,8 @@ jobs:
         id: run_script
         run: |
           # 运行Python脚本并捕获输出的文件名
-          output_file=$(python 4.py)
-          echo "output_file=$output_file" >> $GITHUB_OUTPUT
+          file_paths=$(python 4.py)
+          echo "file_paths=$file_paths" >> $GITHUB_OUTPUT
 
       - name: Commit and push results
         run: |
@@ -38,7 +38,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           
           # 使用动态获取的文件名
-          git add ${{ steps.run_script.outputs.output_file }}
+          git add ${{ steps.run_script.outputs.file_paths }}
           git commit -m "Add processed live streams file"
           
           git push

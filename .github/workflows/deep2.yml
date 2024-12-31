@@ -23,16 +23,22 @@ jobs:
       - name: Run script and get output file
         run: |
           python deep3.py
-          # 假设脚本输出最后一行是文件名
-          output_file=$(tail -n 1 deep3.py)
-          # 检查文件是否存在
-          if [ ! -f "$output_file" ]; then
-            echo "Output file $output_file not found."
-            exit 1
-          fi
+          output_file=$(python deep3.py)
+          echo "output_file=$output_file" >> $GITHUB_OUTPUT
+          # 打印输出文件名
+          echo "Generated output file: $output_file"
+          # 列出生成的文件
+          ls -l
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: run_script
+
+      - name: Check if output file exists
+        run: |
+          if [ ! -f "${{ steps.run_script.outputs.output_file }}" ]; then
+            echo "Output file ${{ steps.run_script.outputs.output_file }} not found."
+            exit 1
+          fi
 
       - name: Configure Git
         run: |
@@ -44,8 +50,10 @@ jobs:
           git add -f "${{ steps.run_script.outputs.output_file }}"
           if git diff --staged --exit-code > /dev/null; then
             echo "No changes to commit."
+            echo "commit=false" >> $GITHUB_OUTPUT
           else
             git commit -m "Update: ${{ steps.run_script.outputs.output_file }} ($(date '+%Y-%m-%d %H:%M:%S'))"
+            echo "commit=true" >> $GITHUB_OUTPUT
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,5 +63,4 @@ jobs:
         uses: ad-m/github-push-action@v0.7.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          commit: ${{ steps.commit_file.outputs.commit }}
-        if: steps.commit_file.outputs.commit != ''
+        if: steps.commit_file.outputs.commit == 'true'

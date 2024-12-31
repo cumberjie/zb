@@ -22,23 +22,12 @@ jobs:
 
       - name: Run script and get output file
         run: |
-          python deep3.py
           output_file=$(python deep3.py)
           echo "output_file=$output_file" >> $GITHUB_OUTPUT
-          # 打印输出文件名
-          echo "Generated output file: $output_file"
-          # 列出生成的文件
-          ls -l
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: run_script
 
-      - name: Check if output file exists
-        run: |
-          if [ ! -f "${{ steps.run_script.outputs.output_file }}" ]; then
-            echo "Output file ${{ steps.run_script.outputs.output_file }} not found."
-            exit 1
-          fi
+      - name: Debug output file
+        run: echo "Output file is: ${{ steps.run_script.outputs.output_file }}"
 
       - name: Configure Git
         run: |
@@ -48,19 +37,7 @@ jobs:
       - name: Add and commit output file
         run: |
           git add -f "${{ steps.run_script.outputs.output_file }}"
-          if git diff --staged --exit-code > /dev/null; then
-            echo "No changes to commit."
-            echo "commit=false" >> $GITHUB_OUTPUT
-          else
-            git commit -m "Update: ${{ steps.run_script.outputs.output_file }} ($(date '+%Y-%m-%d %H:%M:%S'))"
-            echo "commit=true" >> $GITHUB_OUTPUT
-          fi
+          git commit -m "Update: ${{ steps.run_script.outputs.output_file }} ($(date '+%Y-%m-%d %H:%M:%S'))" || true
+          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        id: commit_file
-
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.7.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-        if: steps.commit_file.outputs.commit == 'true'

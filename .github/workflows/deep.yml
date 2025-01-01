@@ -23,9 +23,10 @@ jobs:
         run: |
           output_file=$(python deep3.py | awk 'END{print $NF}')
           echo "output_file=$output_file" >> $GITHUB_OUTPUT
-          echo "Output file: $output_file"  # 输出文件名以供调试
+          echo "Output file: $output_file"
 
       - name: Check if file exists
+        if: steps.process_data.outputs.output_file != ''
         run: |
           if [ -f "${{ steps.process_data.outputs.output_file }}" ]; then
             echo "File exists."
@@ -40,6 +41,7 @@ jobs:
           git config user.email github-actions@github.com
 
       - name: Commit Changes
+        if: steps.process_data.outputs.output_file != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

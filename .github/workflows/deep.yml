@@ -37,7 +37,7 @@ jobs:
           ls -l  # 列出文件确认
 
       - name: Process Data
-        run: python deep3.py
+        run: python 3.py
 
       - name: Check if file exists after generation
         run: |

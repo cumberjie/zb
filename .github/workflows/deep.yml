@@ -22,7 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          output_file=$(python deep3.py | awk 'END{print $NF}')
+          output_file=$(python 3.py | awk 'END{print $NF}')
           git rm -f "$output_file" || true  # Remove the file from the index
           git add "$output_file"            # Add it back
           git config user.name github-actions

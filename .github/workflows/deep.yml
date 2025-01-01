@@ -23,7 +23,7 @@ jobs:
       - name: Get Output File Name
         id: get_output
         run: |
-          FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
+          FILE_NAME=$(python 3.py | awk 'END{print $NF}')
           echo "file_name=$FILE_NAME" >> $GITHUB_OUTPUT
 
       - name: Delete existing file

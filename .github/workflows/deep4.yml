@@ -1,0 +1,53 @@
+name: Process Live Stream Data
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  process-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Process Data
+        run: |
+          # 运行脚本并获取输出文件名
+          output_file=$(python deep3.py | awk 'END{print $NF}')
+          echo "Output file: $output_file"  # 输出文件名以供调试
+
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Check for Changes
+        id: check_changes
+        run: |
+          if git diff --quiet -- "$output_file"; then
+            echo "No changes to commit." >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected." >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit Changes
+        if: steps.check_changes.outputs.changes != 'No changes to commit.'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add "$output_file"
+          git commit -m "Update: $output_file ($(date '+%Y-%m-%d %H:%M:%S'))"
+          git push
+
+      - name: Notify of No Changes
+        if: steps.check_changes.outputs.changes == 'No changes to commit.'
+        run: |
+          echo "No changes to commit. The file content is the same as before."

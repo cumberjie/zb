@@ -1,0 +1,44 @@
+name: Process Live Stream Data
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  process-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Process Data and Commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 运行脚本并获取输出文件名
+          output_file=$(python deep3.py | awk 'END{print $NF}')
+          
+          # 配置 Git
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          
+          # 强制添加并提交文件，即使内容未改变
+          git add "$output_file"
+          
+          # 检查文件是否已更改或被更新
+          if git diff --cached --quiet; then
+            echo "文件内容未更改，但仍提交以确认运行成功"
+            git commit -m "No content changes: $output_file ($(date '+%Y-%m-%d %H:%M:%S'))"
+          else
+            git commit -m "Update: $output_file ($(date '+%Y-%m-%d %H:%M:%S'))"
+          fi
+          
+          # 推送更改
+          git push

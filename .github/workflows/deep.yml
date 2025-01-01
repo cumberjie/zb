@@ -18,28 +18,37 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Delete existing file
+      - name: Get Output File Name
+        id: get_output
         run: |
           FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
-          if [ -f "$FILE_NAME" ]; then
-            rm "$FILE_NAME"
-            echo "Deleted existing file: $FILE_NAME"
+          echo "file_name=$FILE_NAME" >> $GITHUB_OUTPUT
+
+      - name: Delete existing file
+        run: |
+          if [ -f "${{ steps.get_output.outputs.file_name }}" ]; then
+            rm "${{ steps.get_output.outputs.file_name }}"
+            echo "Deleted existing file: ${{ steps.get_output.outputs.file_name }}"
           else
             echo "File does not exist."
           fi
+          ls -l  # 列出文件确认
 
       - name: Process Data
         run: python deep3.py
 
       - name: Check if file exists after generation
         run: |
-          FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
-          if [ -f "$FILE_NAME" ]; then
-            echo "File generated successfully: $FILE_NAME"
+          if [ -f "${{ steps.get_output.outputs.file_name }}" ]; then
+            echo "File generated successfully: ${{ steps.get_output.outputs.file_name }}"
           else
             echo "File generation failed."
             exit 1
           fi
+
+      - name: Modify file to force change
+        run: |
+          echo "# Last updated at $(date '+%Y-%m-%d %H:%M:%S')" >> "${{ steps.get_output.outputs.file_name }}"
 
       - name: Configure Git
         run: |
@@ -48,13 +57,13 @@ jobs:
 
       - name: Add new file
         run: |
-          FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
-          git add "$FILE_NAME"
+          git add -f "${{ steps.get_output.outputs.file_name }}" || echo "Failed to add file: $?"
 
       - name: Commit Changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
-          git commit -m "Update: $FILE_NAME ($(date '+%Y-%m-%d %H:%M:%S'))"
+          git status
+          git diff --staged
+          git commit -m "Update: ${{ steps.get_output.outputs.file_name }} ($(date '+%Y-%m-%d %H:%M:%S'))"
           git push

@@ -1,0 +1,38 @@
+name: Process Live Stream Data
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  process-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Process Data and Commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 运行脚本并获取输出文件名
+          output_file=$(python deep3.py | awk 'END{print $NF}')
+          
+          # 配置 Git
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          
+          # 显示更新了的信息
+          git status
+          
+          # 总是添加并提交文件，使用北京时间
+          git add "$output_file"
+          git commit -m "Update: $output_file ($(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S'))" || true
+          git push

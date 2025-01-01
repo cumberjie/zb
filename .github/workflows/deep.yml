@@ -9,6 +9,8 @@ on:
 jobs:
   process-data:
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
     steps:
       - uses: actions/checkout@v3
         with:
@@ -48,7 +50,7 @@ jobs:
 
       - name: Modify file to force change
         run: |
-          echo "# Last updated at $(date -u --rfc-3339=seconds)" >> "${{ steps.get_output.outputs.file_name }}"
+          echo "# Last updated at $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S')" >> "${{ steps.get_output.outputs.file_name }}"
 
       - name: Configure Git
         run: |
@@ -59,26 +61,11 @@ jobs:
         run: |
           git add -f "${{ steps.get_output.outputs.file_name }}" || echo "Failed to add file: $?"
 
-      - name: Set Commit Dates to Beijing Time
-        id: set_dates
-        run: |
-          export COMMITTER_DATE=$(TZ=Asia/Shanghai date --rfc-3339=seconds)
-          export AUTHOR_DATE=$(TZ=Asia/Shanghai date --rfc-3339=seconds)
-          echo "committer_date=$COMMITTER_DATE" >> $GITHUB_OUTPUT
-          echo "author_date=$AUTHOR_DATE" >> $GITHUB_OUTPUT
-
-      - name: Debug Dates
-        run: |
-          echo "Committer Date: ${{ steps.set_dates.outputs.committer_date }}"
-          echo "Author Date: ${{ steps.set_dates.outputs.author_date }}"
-
       - name: Commit Changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_COMMITTER_DATE: ${{ steps.set_dates.outputs.committer_date }}
-          GIT_AUTHOR_DATE: ${{ steps.set_dates.outputs.author_date }}
         run: |
           git status
           git diff --staged
-          git commit -m "Update: ${{ steps.get_output.outputs.file_name }} ($(date -u --rfc-3339=seconds))"
+          git commit -m "Update: ${{ steps.get_output.outputs.file_name }} ($(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S'))"
           git push

@@ -18,20 +18,26 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Process Data
-        id: process_data
+      - name: Delete existing file
         run: |
-          output_file=$(python deep3.py | awk 'END{print $NF}')
-          echo "output_file=$output_file" >> $GITHUB_OUTPUT
-          echo "Output file: $output_file"
-
-      - name: Check if file exists
-        if: steps.process_data.outputs.output_file != ''
-        run: |
-          if [ -f "${{ steps.process_data.outputs.output_file }}" ]; then
-            echo "File exists."
+          FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
+          if [ -f "$FILE_NAME" ]; then
+            rm "$FILE_NAME"
+            echo "Deleted existing file: $FILE_NAME"
           else
-            echo "File does not exist. Exiting."
+            echo "File does not exist."
+          fi
+
+      - name: Process Data
+        run: python deep3.py
+
+      - name: Check if file exists after generation
+        run: |
+          FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
+          if [ -f "$FILE_NAME" ]; then
+            echo "File generated successfully: $FILE_NAME"
+          else
+            echo "File generation failed."
             exit 1
           fi
 
@@ -40,11 +46,15 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
 
+      - name: Add new file
+        run: |
+          FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
+          git add "$FILE_NAME"
+
       - name: Commit Changes
-        if: steps.process_data.outputs.output_file != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git add -f "${{ steps.process_data.outputs.output_file }}"
-          git commit -m "Update: ${{ steps.process_data.outputs.output_file }} ($(date '+%Y-%m-%d %H:%M:%S'))" --allow-empty
+          FILE_NAME=$(python deep3.py | awk 'END{print $NF}')
+          git commit -m "Update: $FILE_NAME ($(date '+%Y-%m-%d %H:%M:%S'))"
           git push
